@@ -1,45 +1,127 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  SafeAreaView,
+} from "react-native";
+import React, { useEffect } from "react";
+import { Redirect, Tabs } from "expo-router";
+import { all_images } from "@/assets/images/image";
+import ICONS from "react-native-vector-icons/Ionicons";
+import { useAuth } from "@clerk/clerk-expo";
+const TabIcon = ({ foucs, title, img }: any) => {
+  return (
+    <>
+      {foucs ? (
+        <ImageBackground
+          style={{
+            width: 60,
+            height: 40,
+            backgroundColor: "98cae1",
+            backgroundAttachment: "transparent",
+            display: "flex",
+            marginTop: 4,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+          }}
+        >
+          <ICONS name={img} size={35} color={"#212513"} />
+          {/* <Text style={{ color: "white", fontSize: 8 }}>{title}</Text> */}
+        </ImageBackground>
+      ) : (
+        <ImageBackground
+          style={{
+            width: 60,
+            height: 40,
+            display: "flex",
+            marginTop: 4,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+          }}
+        >
+          <ICONS name={img} size={35} color={"#21516b"} />
+        </ImageBackground>
+      )}
+    </>
+  );
+};
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const _Layout = () => {
+  const { isSignedIn, isLoaded } = useAuth();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  // if (!isLoaded) return <ActivityIndicator color={"black"} size={"large"} />; // Wait for auth state to load
+  // if (!isLoaded || !isSignedIn) {
+  //   return (
+  //     <SafeAreaView className="flex-1 justify-center items-center">
+  //       <Text>Loading authentication... Please wait.</Text>
+  //       <ActivityIndicator className="mt-5" color={"black"} size={"large"} />
+  //     </SafeAreaView>
+  //   );
+  // }
 
+  // if (isSignedIn) {
+  //   return <Redirect href="/sign-in" />;
+  // }
+  const style = StyleSheet.create({});
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "transparent",
+          width: "100%",
+          position: "absolute",
+          borderTopWidth: 0,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon foucs={focused} title={"Home"} img={"home"} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="profile"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon foucs={focused} title={"Profile"} img={"person"} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon foucs={focused} title={"search1"} img={"search"} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="setting"
+        options={{
+          title: "",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon foucs={focused} title={"settings"} img={"settings"} />
+          ),
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default _Layout;

@@ -1,39 +1,39 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { Stack } from "expo-router";
+import "./global.css";
+import { ThemeProvider } from "@/them/theme";
+import { ClerkProvider } from "@clerk/clerk-expo";
+// import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import * as SecureStore from "expo-secure-store";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+  const tokenCache = {
+    getToken: (key: string) => SecureStore.getItemAsync(key),
+    saveToken: (key: string, value: string) =>
+      SecureStore.setItemAsync(key, value),
+    deleteToken: (key: string) => SecureStore.deleteItemAsync(key),
+  };
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ClerkProvider
+      tokenCache={tokenCache}
+      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
+      <ThemeProvider>
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false, title: "Home" }}
+          />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="books"
+            options={{
+              headerShown: true,
+              title: "Text-Books",
+              headerStyle: { backgroundColor: "#98cae1" },
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </ClerkProvider>
   );
 }
