@@ -30,12 +30,11 @@ const Setting = () => {
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <View className="justify-center items-center p-3 fixed">
+        <Text className=" font-extrabold text-xl mb-3 ">Settings</Text>
+        {/* <View className="border-black border-b opacity-30  w-[90%] " /> */}
+      </View>
       <ScrollView>
-        <View className="justify-center items-center p-3 fixed">
-          <Text className=" font-extrabold text-xl mb-3">Settings</Text>
-          {/* <View className="border-black border-b opacity-30  w-[90%] " /> */}
-        </View>
-
         <View className="justify-center   items-center h-[200px]  rounded-2xl bg-gray-200 m-8 mt-0 mb-0">
           <View className=" p-8 rounded-lg">
             {/* <Image source={all_images.logo} /> */}

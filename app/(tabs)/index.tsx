@@ -159,6 +159,8 @@ export default function Index() {
                 color={color}
                 title={item.authors[0]?.name ?? "Unknown Author"}
                 detail={item.title}
+                download_count={item.download_count}
+                language={item.languages.toString()}
                 linesTitle={1}
                 linesDetail={2}
                 textUrl={
